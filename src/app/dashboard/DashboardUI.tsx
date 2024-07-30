@@ -4,6 +4,16 @@ import { useState, useEffect, useTransition } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Tables } from "@/types/database";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Link from "next/link";
+
 import { toast } from "@/components/ui/use-toast";
 
 type DashboardUIProps = {
@@ -34,13 +44,25 @@ export default function DashboardUI(props: DashboardUIProps) {
   }, [user, supabase]);
 
   return (
-    <div>
+    <div className="w-5/6">
       {isPending ? (
         "Loading"
       ) : spaces.length > 0 ? (
-        <div>
+        <div className="grid md:grid-cols-2 auto-rows-auto grid-cols-1 lg:grid-cols-3  gap-2  justify-around items-center w-full">
           {spaces.map((space: Tables<"spaces">, index: number) => {
-            return <p key={index}>{space.name}</p>;
+            return (
+              <Link href={`/space/${space.id}`} key={index}>
+                <Card className="">
+                  <CardHeader>
+                    <CardTitle>{space.name}</CardTitle>
+                    <CardDescription>
+                      {space.testimonial_ids?.length ?? 0} total testimonials
+                      collected so far
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            );
           })}
         </div>
       ) : (

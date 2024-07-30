@@ -92,7 +92,7 @@ export async function GET(request: Request) {
     const response = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from("spaces")
-      .select("name, testimonial_ids,logo_url")
+      .select("id,name, testimonial_ids,logo_url")
       .eq("owner_id", response.data.user?.id);
 
     if (error) {
