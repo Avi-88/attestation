@@ -47,7 +47,7 @@ export default function Header() {
   };
 
   return (
-    <div className="flex justify-between items-center py-3 px-6 bg-red-200">
+    <div className="flex justify-between items-center py-3 px-6  shadow-lg">
       <div className="font-bold">Testes</div>
       <div>
         {user ? (
