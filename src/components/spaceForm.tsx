@@ -31,6 +31,7 @@ import { useFieldArray } from "react-hook-form";
 import { toast } from "./ui/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TestimonialConfig } from "@/types";
 
 const FormSchema = z.object({
   name: z.string().min(1, { message: "This is a required field" }),
@@ -75,12 +76,6 @@ export default function SpaceDialog() {
 
   const maxFileSize = 1024 * 1024 * 2;
 
-  type SpaceBody = {
-    spaceName: string;
-    header: string;
-    message: string;
-  };
-
   const handleLogoSelect = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.files) {
       if (e.target.files[0].size > maxFileSize) {
@@ -97,16 +92,13 @@ export default function SpaceDialog() {
   };
 
   const handleSpaceCreation = async () => {
-    let config = {
+    let config: TestimonialConfig = {
+      header,
+      message,
       includeTitleandCompany: doTitleCompany,
       includeRating: doRating,
       includeSocials: doSocials,
       questions: [question1, question2, question3],
-    };
-    const body: SpaceBody = {
-      spaceName,
-      header,
-      message,
     };
 
     startTransition(async () => {
@@ -115,10 +107,8 @@ export default function SpaceDialog() {
         if (logo) {
           data.append("file", logo);
         }
-        data.append("name", body.spaceName);
-        data.append("header", body.header);
-        data.append("message", body.message);
-        data.append("config", JSON.stringify(config));
+        data.append("name", spaceName);
+        data.append("testimonial_config", JSON.stringify(config));
 
         const res = await fetch("/api/space", {
           method: "POST",
@@ -207,19 +197,19 @@ export default function SpaceDialog() {
                 htmlFor="question1"
                 className="mb-2 font-semibold text-gray-500"
               >
-                {question1 || "Question 1"}
+                • {question1 || "Question 1"}
               </Label>
               <Label
                 htmlFor="question2"
                 className="mb-2 font-semibold text-gray-500"
               >
-                {question2 || "Question 2."}
+                • {question2 || "Question 2."}
               </Label>
               <Label
                 htmlFor="question3"
                 className="mb-2 font-semibold text-gray-500"
               >
-                {question3 || "Question 3"}
+                • {question3 || "Question 3"}
               </Label>
             </div>
           </div>

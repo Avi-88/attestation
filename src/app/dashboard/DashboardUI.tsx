@@ -1,5 +1,4 @@
 "use client";
-import { Space } from "@/types";
 import { useState, useEffect, useTransition } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -47,17 +46,17 @@ export default function DashboardUI(props: DashboardUIProps) {
     <div className="w-5/6">
       {isPending ? (
         "Loading"
-      ) : spaces.length > 0 ? (
+      ) : spaces?.length > 0 ? (
         <div className="grid md:grid-cols-2 auto-rows-auto grid-cols-1 lg:grid-cols-3  gap-2  justify-around items-center w-full">
-          {spaces.map((space: Tables<"spaces">, index: number) => {
+          {spaces?.map((space: Tables<"spaces">, index: number) => {
             return (
               <Link href={`/space/${space.id}`} key={index}>
                 <Card className="">
                   <CardHeader>
                     <CardTitle>{space.name}</CardTitle>
                     <CardDescription>
-                      {space.testimonial_ids?.length ?? 0} total testimonials
-                      collected so far
+                      {space?.collected_testimonials?.length ?? 0} total
+                      testimonials collected so far
                     </CardDescription>
                   </CardHeader>
                 </Card>

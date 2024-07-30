@@ -1,18 +1,14 @@
 import { type UUID } from "crypto";
 
-export interface Space {
-  id: UUID;
-  user_id: UUID;
-  name: string;
+export interface TestimonialConfig {
   header: string;
-  logo_url?: string;
   message: string;
-  created_at: Date;
-  testimonial_ids?: UUID[];
-  testimonial_config: JSON;
+  logo_url?: string;
+  includeTitleandCompany: boolean;
+  includeRating: boolean;
+  includeSocials: boolean;
+  questions: string[];
 }
-
-
 
 export interface SuccessResponse {
   status: number;
@@ -24,11 +20,4 @@ export interface ErrorResponse {
   status: number;
   message?: string | "Something went wrong";
   extraData?: object;
-}
-
-export interface SpaceBody {
-  name: string;
-  header: string;
-  message: string;
-  testimonial_config: object;
 }

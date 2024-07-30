@@ -1,7 +1,8 @@
-import { ErrorResponse, SuccessResponse } from "@/types";
+import { ErrorResponse, SuccessResponse, TestimonialConfig } from "@/types";
 import { createClient } from "@/utils/supabase/server";
 import { v4 as uuid } from "uuid";
 import { NextResponse } from "next/server";
+import { Tables } from "@/types/database";
 
 async function handleLogoUpload(file: File, spaceUUID: string) {
   const supabase = createClient();
@@ -20,16 +21,13 @@ async function handleLogoUpload(file: File, spaceUUID: string) {
   };
 }
 
-async function handleSpaceCreation(spaceData: any) {
-  const { id, name, header, owner_id, message, logo_url, testimonial_config } =
-    spaceData;
+async function handleSpaceCreation(spaceData: Tables<"spaces">) {
+  const { id, name, owner_id, logo_url, testimonial_config } = spaceData;
   const supabase = createClient();
   const { error, data } = await supabase.from("spaces").insert({
     id,
     name,
     owner_id,
-    header,
-    message,
     logo_url,
     testimonial_config,
   });
@@ -45,9 +43,9 @@ export async function POST(request: Request) {
   const formData = await request.formData();
   const file = formData.getAll("file")[0] as File;
   const name = formData.get("name") as string;
-  const header = formData.get("header") as string;
-  const message = formData.get("message") as string;
-  const config = formData.get("config") as string;
+  const config = formData.get("testimonial_config") as string;
+
+  const testimonial_config: TestimonialConfig = JSON.parse(config);
 
   const spaceUUID = uuid();
 
@@ -55,23 +53,22 @@ export async function POST(request: Request) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  let logoUrl;
+  let logo_url = "";
   let objId;
   try {
     if (file) {
       const response = await handleLogoUpload(file, spaceUUID);
-      logoUrl = response.publicUrl;
+      logo_url = response.publicUrl;
       objId = response.objectId;
+      testimonial_config["logo_url"] = logo_url;
     }
 
     const resData = await handleSpaceCreation({
       id: spaceUUID,
       name,
-      header,
-      message,
-      logo_url: logoUrl,
-      testimonial_config: config,
-      owner_id: user?.id,
+      logo_url,
+      testimonial_config: JSON.stringify(testimonial_config),
+      owner_id: user?.id || "",
     });
     return Response.json(
       { message: "success", data: resData },
@@ -92,7 +89,7 @@ export async function GET(request: Request) {
     const response = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from("spaces")
-      .select("id,name, testimonial_ids,logo_url")
+      .select("id,name, collected_testimonials,logo_url")
       .eq("owner_id", response.data.user?.id);
 
     if (error) {

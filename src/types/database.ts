@@ -43,37 +43,31 @@ export type Database = {
       }
       spaces: {
         Row: {
-          created_at: string
-          header: string
+          collected_testimonials: string[] | null
+          created_at?: string
           id: string
-          logo_url: string | null
-          message: string
+          logo_url: string
           name: string
           owner_id: string
           testimonial_config: Json
-          testimonial_ids: string[] | null
         }
         Insert: {
+          collected_testimonials?: string[] | null
           created_at?: string
-          header: string
           id?: string
-          logo_url?: string | null
-          message?: string
+          logo_url: string
           name: string
-          owner_id?: string
+          owner_id: string
           testimonial_config?: Json
-          testimonial_ids?: string[] | null
         }
         Update: {
+          collected_testimonials?: string[] | null
           created_at?: string
-          header?: string
           id?: string
-          logo_url?: string | null
-          message?: string
+          logo_url?: string
           name?: string
           owner_id?: string
           testimonial_config?: Json
-          testimonial_ids?: string[] | null
         }
         Relationships: [
           {
@@ -89,36 +83,39 @@ export type Database = {
         Row: {
           content: string
           created_at: string
-          creator: string
+          creator_avatar_url: string | null
+          creator_email: string
+          creator_name: string
           format: string
           id: number
           job_title: string | null
-          org_name: string | null
-          socials: string[] | null
+          social_handle: string | null
           space_id: string
           video_url: string | null
         }
         Insert: {
           content?: string
           created_at?: string
-          creator?: string
+          creator_avatar_url?: string | null
+          creator_email: string
+          creator_name: string
           format?: string
           id?: number
           job_title?: string | null
-          org_name?: string | null
-          socials?: string[] | null
+          social_handle?: string | null
           space_id: string
           video_url?: string | null
         }
         Update: {
           content?: string
           created_at?: string
-          creator?: string
+          creator_avatar_url?: string | null
+          creator_email?: string
+          creator_name?: string
           format?: string
           id?: number
           job_title?: string | null
-          org_name?: string | null
-          socials?: string[] | null
+          social_handle?: string | null
           space_id?: string
           video_url?: string | null
         }
